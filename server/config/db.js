@@ -1,7 +1,9 @@
 // server/config/db.js - MongoDB Connection Configuration
 
 const mongoose = require('mongoose');
-const Station = require('../models/Station'); // Import Station model to ensure index creation
+// DO NOT REQUIRE Station MODEL DIRECTLY HERE ANYMORE
+// const Station = require('../models/Station'); // REMOVE THIS LINE
+
 
 const connectDB = async () => {
     try {
@@ -13,10 +15,18 @@ const connectDB = async () => {
         console.log(`MongoDB Connected: ${conn.connection.host}`);
 
         // --- Explicitly ensure geospatial index is created ---
-        // This is crucial for $geoWithin and $near queries to work efficiently.
-        // It's idempotent, so running it multiple times is safe.
-        await Station.collection.createIndex({ "location.coordinates": "2dsphere" });
-        console.log("Geospatial index on 'Station.location.coordinates' ensured.");
+        // Retrieve the Station model here, after successful connection.
+        // This ensures the model is available in Mongoose's registry.
+        const Station = mongoose.model('Station'); // <--- IMPORTANT CHANGE: Get the model by name
+
+        if (Station) {
+            await Station.createIndexes(); // Call createIndexes() directly on the model.
+            console.log("Geospatial index on 'Station.location.coordinates' ensured.");
+        } else {
+            // This error indicates a serious problem with model registration.
+            console.error("Error: Station model not found in Mongoose registry. Please ensure server/models/Station.js is loaded correctly.");
+            process.exit(1); // Exit if model is not registered, as app won't function.
+        }
 
     } catch (error) {
         console.error(`Error: ${error.message}`);
