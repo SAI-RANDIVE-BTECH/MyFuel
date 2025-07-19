@@ -1,11 +1,9 @@
 // server/config/db.js - MongoDB Connection Configuration
 
 const mongoose = require('mongoose');
-// DO NOT REQUIRE Station MODEL DIRECTLY HERE ANYMORE
-// const Station = require('../models/Station'); // REMOVE THIS LINE
 
-
-const connectDB = async () => {
+// connectDB now accepts the Station model as an argument
+const connectDB = async (StationModel) => { // <--- IMPORTANT CHANGE: Accepts StationModel as argument
     try {
         const conn = await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
@@ -15,22 +13,18 @@ const connectDB = async () => {
         console.log(`MongoDB Connected: ${conn.connection.host}`);
 
         // --- Explicitly ensure geospatial index is created ---
-        // Retrieve the Station model here, after successful connection.
-        // This ensures the model is available in Mongoose's registry.
-        const Station = mongoose.model('Station'); // <--- IMPORTANT CHANGE: Get the model by name
-
-        if (Station) {
-            await Station.createIndexes(); // Call createIndexes() directly on the model.
+        // Use the StationModel passed as an argument
+        if (StationModel) { // Check if the model was successfully passed
+            await StationModel.createIndexes(); // <--- Use the passed model
             console.log("Geospatial index on 'Station.location.coordinates' ensured.");
         } else {
-            // This error indicates a serious problem with model registration.
-            console.error("Error: Station model not found in Mongoose registry. Please ensure server/models/Station.js is loaded correctly.");
-            process.exit(1); // Exit if model is not registered, as app won't function.
+            console.error("Error: Station model was not passed to connectDB function.");
+            process.exit(1);
         }
 
     } catch (error) {
         console.error(`Error: ${error.message}`);
-        process.exit(1); // Exit process with failure
+        process.exit(1);
     }
 };
 

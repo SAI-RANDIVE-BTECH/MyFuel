@@ -11,20 +11,19 @@ dotenv.config();
 
 const app = express();
 
-// --- Explicitly require all Mongoose models here to ensure they are loaded and registered ---
-// This is crucial. It ensures Mongoose processes the schemas and registers the models
-// before any other part of the application tries to use them or create indexes.
-require('./models/User');
-require('./models/Station');
-require('./models/Booking');
-require('./models/Expense');
-
+// --- Explicitly require all Mongoose models here ---
+// This ensures Mongoose processes the schemas and registers the models.
+// Import the Station model specifically to pass it to connectDB.
+const User = require('./models/User');
+const Station = require('./models/Station'); // <--- IMPORTANT CHANGE: Store Station model in a variable
+const Booking = require('./models/Booking');
+const Expense = require('./models/Expense');
 // --- END Explicit Model Loading ---
 
 
 // --- Connect to MongoDB ---
-// Now, connectDB is called after all models are definitely loaded and registered.
-connectDB();
+// Pass the Station model directly to connectDB
+connectDB(Station); // <--- IMPORTANT CHANGE: Pass Station model as argument
 
 // --- Middleware ---
 app.use(cors({
