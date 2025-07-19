@@ -4,17 +4,26 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('MyFuel Map page loaded successfully!');
 
     const mapElement = document.getElementById('map');
-    const locationStatus = document.getElementById('locationStatus');
-    const findMeButton = document.getElementById('findMeButton');
+    // Renamed from findMeButton to locateMeButton as per map.html
+    const locateMeButton = document.getElementById('locateMeButton'); // <--- CHANGED ID REFERENCE
     const fuelTypeFilter = document.getElementById('fuelTypeFilter');
-    const brandFilter = document.getElementById('brandFilter');
-    const applyFiltersButton = document.getElementById('applyFiltersButton');
-    const stationList = document.getElementById('stationList');
+    // findNearestButton is not used for a separate action, its logic is integrated with locateMeButton
+    // const findNearestButton = document.getElementById('findNearestButton'); // Removed direct reference
+    const mapMessageBox = document.getElementById('mapMessageBox'); // Message box for map
 
     let map;
     let userMarker;
     let stationMarkers = L.layerGroup(); // Layer group to manage station markers
     let currentStationsData = []; // To store fetched station data
+
+    // --- Utility function to display messages for map page ---
+    function showMapMessage(message, type = 'error') {
+        mapMessageBox.textContent = message;
+        mapMessageBox.className = `mt-4 p-3 rounded-md text-center ${type} block`;
+        setTimeout(() => {
+            mapMessageBox.classList.add('hidden');
+        }, 5000);
+    }
 
     // --- Initialize Map ---
     function initializeMap(latitude = 20.5937, longitude = 78.9629, zoom = 5) { // Default to center of India
@@ -34,12 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Geolocation ---
     function getUserLocation() {
         if (navigator.geolocation) {
-            locationStatus.textContent = 'Getting your current location...';
+            showMapMessage('Getting your current location...', 'info');
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
-                    locationStatus.textContent = `Location found: Lat ${lat.toFixed(4)}, Lng ${lng.toFixed(4)}`;
+                    showMapMessage(`Location found: Lat ${lat.toFixed(4)}, Lng ${lng.toFixed(4)}`, 'success');
                     map.setView([lat, lng], 13); // Center map on user's location with higher zoom
 
                     // Remove previous user marker if exists
@@ -55,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     fetchAndDisplayStations(lat, lng); // Fetch and display stations based on user's location
                 },
                 (error) => {
-                    locationStatus.textContent = `Error getting location: ${error.message}. Displaying default map.`;
+                    showMapMessage(`Error getting location: ${error.message}. Displaying default map.`, 'error');
                     console.error('Geolocation error:', error);
                     fetchAndDisplayStations(); // Fetch all stations if location fails
                 },
@@ -66,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             );
         } else {
-            locationStatus.textContent = 'Geolocation is not supported by your browser. Displaying default map.';
+            showMapMessage('Geolocation is not supported by your browser. Displaying default map.', 'info');
             fetchAndDisplayStations(); // Fetch all stations if geolocation not supported
         }
     }
@@ -77,22 +86,15 @@ document.addEventListener('DOMContentLoaded', () => {
         stationMarkers.clearLayers(); // Clear existing markers
 
         const selectedFuelType = fuelTypeFilter.value;
-        const selectedBrand = brandFilter.value;
 
         let apiUrl = '/api/stations'; // Base API endpoint
-
-        // Construct query parameters for filtering and nearest search
         const params = new URLSearchParams();
+
         if (selectedFuelType !== 'all') {
             params.append('type', selectedFuelType);
         }
-        if (selectedBrand !== 'all') {
-            params.append('brand', selectedBrand);
-        }
+
         if (userLat !== null && userLng !== null) {
-            // For 'nearest' endpoint, you might want a separate API call or combine
-            // For now, we'll fetch all and filter/sort client-side if coordinates are present
-            // A dedicated /api/stations/nearest endpoint would be more efficient for large datasets
             params.append('lat', userLat);
             params.append('lng', userLng);
             params.append('maxDistance', 50); // Example: search within 50 KM
@@ -105,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            currentStationsData = data.data; // Store fetched data
+            currentStationsData = data.data;
 
             if (currentStationsData.length === 0) {
                 stationList.innerHTML = '<p class="text-gray-500 text-center mt-4">No stations found matching your criteria.</p>';
@@ -116,17 +118,16 @@ document.addEventListener('DOMContentLoaded', () => {
             // If using /api/stations and providing lat/lng, we still need to calculate client-side.
             if (userLat !== null && userLng !== null && apiUrl === '/api/stations') {
                  currentStationsData.forEach(station => {
-                    // Coordinates in MongoDB are [longitude, latitude]
                     station.distance = calculateDistance(userLat, userLng, station.location.coordinates[1], station.location.coordinates[0]);
                 });
                 currentStationsData.sort((a, b) => a.distance - b.distance);
             }
 
-
             renderStations(currentStationsData, userLat, userLng);
 
         } catch (error) {
             console.error('Error fetching stations from backend:', error);
+            showMapMessage('Failed to load stations. Please try again later.', 'error');
             stationList.innerHTML = '<p class="text-red-600 text-center mt-4">Failed to load stations. Please try again later.</p>';
         }
     }
@@ -134,19 +135,30 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Render Stations on Map and List ---
     function renderStations(stationsToRender, userLat = null, userLng = null) {
         stationMarkers.clearLayers(); // Clear existing station markers
-        stationList.innerHTML = ''; // Clear existing list
+        stationList.innerHTML = ''; // Clear existing list (if you re-add a list section in HTML)
+
+        // The station list div is missing from map.html. Let's ensure it exists or remove its reference.
+        // For now, I'll assume you will re-add a station list section to map.html.
+        // If not, remove the `stationList.innerHTML = '';` and related code.
+        const stationListElement = document.getElementById('stationList');
+        if (stationListElement) {
+            stationListElement.innerHTML = ''; // Clear previous list
+        } else {
+            console.warn("Element with ID 'stationList' not found. Station list will not be displayed.");
+        }
+
 
         if (stationsToRender.length === 0) {
-            stationList.innerHTML = '<p class="text-gray-500 text-center mt-4">No stations found matching your filters.</p>';
+            if (stationListElement) {
+                stationListElement.innerHTML = '<p class="text-gray-500 text-center mt-4">No stations found matching your filters.</p>';
+            }
             return;
         }
 
         stationsToRender.forEach(station => {
-            // Coordinates in MongoDB are [longitude, latitude]
             const stationLat = station.location.coordinates[1];
             const stationLng = station.location.coordinates[0];
 
-            // Add marker to map
             const marker = L.marker([stationLat, stationLng]).addTo(stationMarkers);
             marker.bindPopup(`
                 <div class="font-inter">
@@ -155,32 +167,34 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="text-sm text-gray-700">Brand: <span class="font-medium">${station.brand}</span></p>
                     <p class="text-sm text-gray-700">Approx. Wait Time: <span class="font-bold text-blue-600">${station.currentWaitTime} mins</span></p>
                     ${userLat !== null && station.distance ? `<p class="text-sm text-gray-700">Distance: <span class="font-medium">${station.distance.toFixed(2)} km</span></p>` : ''}
-                    <button onclick="window.location.href='booking.html?stationId=${station._id}'"
+                    <button onclick="window.location.href='/booking?stationId=${station._id}'"
                             class="mt-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-1.5 px-3 rounded-md shadow-sm">
                         Book Slot
                     </button>
                 </div>
             `);
 
-            // Add to station list
-            const stationCard = document.createElement('div');
-            stationCard.className = 'station-card';
-            stationCard.innerHTML = `
-                <div class="flex items-center mb-2">
-                    <img src="${station.logoUrl}" alt="${station.brand} Logo" class="w-10 h-10 rounded-full mr-3 border border-gray-200">
-                    <div>
-                        <h4 class="text-lg font-semibold text-gray-800">${station.name}</h4>
-                        <p class="text-gray-600 text-sm">Type: <span class="font-medium capitalize">${station.type}</span> | Brand: <span class="font-medium">${station.brand}</span></p>
+            // If a station list element exists, add cards to it
+            if (stationListElement) {
+                const stationCard = document.createElement('div');
+                stationCard.className = 'station-card'; // Assuming you have .station-card styles in map.css
+                stationCard.innerHTML = `
+                    <div class="flex items-center mb-2">
+                        <img src="${station.logoUrl}" alt="${station.brand} Logo" class="w-10 h-10 rounded-full mr-3 border border-gray-200">
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-800">${station.name}</h4>
+                            <p class="text-gray-600 text-sm">Type: <span class="font-medium capitalize">${station.type}</span> | Brand: <span class="font-medium">${station.brand}</span></p>
+                        </div>
                     </div>
-                </div>
-                <p class="text-gray-600 text-sm mb-2">Approx. Wait Time: <span class="font-bold text-blue-600">${station.currentWaitTime} mins</span></p>
-                ${userLat !== null && station.distance ? `<p class="text-gray-600 text-sm mb-2">Distance: <span class="font-medium">${station.distance.toFixed(2)} km</span></p>` : ''}
-                <button onclick="window.location.href='booking.html?stationId=${station._id}'"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md shadow-md transform hover:scale-105 transition duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-sm">
-                    Book Slot
-                </button>
-            `;
-            stationList.appendChild(stationCard);
+                    <p class="text-gray-600 text-sm mb-2">Approx. Wait Time: <span class="font-bold text-blue-600">${station.currentWaitTime} mins</span></p>
+                    ${userLat !== null && station.distance ? `<p class="text-gray-600 text-sm mb-2">Distance: <span class="font-medium">${station.distance.toFixed(2)} km</span></p>` : ''}
+                    <button onclick="window.location.href='/booking?stationId=${station._id}'"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md shadow-md transform hover:scale-105 transition duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-sm">
+                        Book Slot
+                    </button>
+                `;
+                stationListElement.appendChild(stationCard);
+            }
         });
     }
 
@@ -199,16 +213,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Event Listeners ---
-    findMeButton.addEventListener('click', getUserLocation);
-    applyFiltersButton.addEventListener('click', () => {
-        // If user location was previously found, re-display using that. Otherwise, default.
-        if (userMarker && userMarker.getLatLng()) {
-            const latLng = userMarker.getLatLng();
-            fetchAndDisplayStations(latLng.lat, latLng.lng);
-        } else {
-            fetchAndDisplayStations();
-        }
-    });
+    // Changed from findMeButton to locateMeButton
+    if (locateMeButton) { // Ensure button exists before adding listener
+        locateMeButton.addEventListener('click', getUserLocation);
+    } else {
+        console.error("Element with ID 'locateMeButton' not found.");
+    }
+
+    // The 'Apply Filters' button is part of the filter section in map.html
+    // and its ID is 'applyFiltersButton'. Let's ensure it's correctly referenced.
+    const applyFiltersButton = document.getElementById('applyFiltersButton');
+    if (applyFiltersButton) {
+        applyFiltersButton.addEventListener('click', () => {
+            if (userMarker && userMarker.getLatLng()) {
+                const latLng = userMarker.getLatLng();
+                fetchAndDisplayStations(latLng.lat, latLng.lng);
+            } else {
+                fetchAndDisplayStations();
+            }
+        });
+    } else {
+        console.warn("Element with ID 'applyFiltersButton' not found. Filter button functionality might be limited.");
+    }
 
     // --- Initial Map Load ---
     initializeMap(); // Initialize map with default view

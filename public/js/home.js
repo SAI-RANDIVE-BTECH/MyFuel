@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             setTimeout(() => {
                 findStationsButton.style.transform = 'scale(1)';
-                // Navigate to the map page
-                window.location.href = 'map.html';
+                // Navigate to the map page using the clean URL
+                window.location.href = '/map'; // <--- CHANGED TO CLEAN URL
             }, 100); // Reset scale after a short delay
         });
     }
