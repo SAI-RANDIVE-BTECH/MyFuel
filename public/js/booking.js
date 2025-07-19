@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const bookingForm = document.getElementById('bookingForm');
     const fuelTypeSelect = document.getElementById('fuelType');
+    const vehicleTypeSelect = document.getElementById('vehicleType'); // New vehicle type select
     const quantityInput = document.getElementById('quantity');
     const timeSlotSelect = document.getElementById('timeSlot');
     const messageBox = document.getElementById('messageBox');
@@ -23,12 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const tokenNumberElem = document.getElementById('tokenNumber');
     const tokenUserNameElem = document.getElementById('tokenUserName');
     const tokenUserPhoneElem = document.getElementById('tokenUserPhone');
+    const tokenVehicleTypeElem = document.getElementById('tokenVehicleType'); // New token vehicle type display
     const tokenBrandLogo = document.getElementById('tokenBrandLogo');
     const qrCodeCanvas = document.getElementById('qrCodeCanvas');
     const downloadTokenButton = document.getElementById('downloadTokenButton');
 
     let selectedStation = null;
-    let currentUser = null; // Will be fetched from localStorage
+    let currentUser = null;
 
     // --- Utility function to display messages ---
     function showMessage(message, type = 'error') {
@@ -50,15 +52,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const userJson = localStorage.getItem('user');
         if (userJson) {
             currentUser = JSON.parse(userJson);
-            // Ensure phone number is available for token display
             if (!currentUser.phoneNumber) {
-                currentUser.phoneNumber = 'N/A'; // Or a default placeholder
+                currentUser.phoneNumber = 'N/A';
             }
         } else {
-            // If no user is logged in, redirect to login or show a message
             showMessage('You need to be logged in to book a slot. Redirecting to login...', 'info');
             setTimeout(() => {
-                window.location.href = 'login.html';
+                window.location.href = '/login'; // Use clean URL
             }, 2000);
         }
     }
@@ -79,15 +79,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            selectedStation = data.data; // Store fetched station data
+            selectedStation = data.data;
 
             if (selectedStation) {
-                stationLogo.src = selectedStation.logoUrl; // Use logoUrl from backend
+                stationLogo.src = selectedStation.logoUrl;
                 stationLogo.alt = `${selectedStation.brand} Logo`;
                 stationNameElem.textContent = selectedStation.name;
                 stationTypeBrandElem.textContent = `Type: ${selectedStation.type.charAt(0).toUpperCase() + selectedStation.type.slice(1)} | Brand: ${selectedStation.brand}`;
                 stationWaitTimeElem.textContent = `${selectedStation.currentWaitTime} mins`;
-                stationPhoneElem.textContent = selectedStation.contactPhone || 'N/A'; // Use contactPhone from backend
+                stationPhoneElem.textContent = selectedStation.contactPhone || 'N/A';
 
                 populateFuelTypeOptions(selectedStation.type);
                 populateTimeSlots();
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Populate Fuel Type Options based on Station Type ---
     function populateFuelTypeOptions(stationType) {
-        fuelTypeSelect.innerHTML = '<option value="">Select type</option>'; // Clear existing options
+        fuelTypeSelect.innerHTML = '<option value="">Select type</option>';
         if (stationType === 'petrol' || stationType === 'diesel' || stationType === 'cng' || stationType === 'ev') {
             fuelTypeSelect.innerHTML += `<option value="${stationType}">${stationType.charAt(0).toUpperCase() + stationType.slice(1)}</option>`;
         }
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function populateTimeSlots() {
         timeSlotSelect.innerHTML = '<option value="">Select a time slot</option>';
         const now = new Date();
-        for (let i = 0; i < 6; i++) { // Generate slots for next 3 hours (30 min intervals)
+        for (let i = 0; i < 6; i++) {
             const slotTime = new Date(now.getTime() + (i * 30 * 60 * 1000));
             const hours = String(slotTime.getHours()).padStart(2, '0');
             const minutes = String(slotTime.getMinutes()).padStart(2, '0');
@@ -147,11 +147,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const fuelType = fuelTypeSelect.value;
-        const quantity = parseFloat(quantityInput.value); // Ensure it's a number
+        const vehicleType = vehicleTypeSelect.value; // Get vehicle type
+        const quantity = parseFloat(quantityInput.value);
         const timeSlot = timeSlotSelect.value;
-        const bookingDate = new Date().toISOString(); // Current date for booking
+        const bookingDate = new Date().toISOString();
 
-        if (!fuelType || isNaN(quantity) || quantity <= 0 || !timeSlot) {
+        if (!fuelType || !vehicleType || isNaN(quantity) || quantity <= 0 || !timeSlot) {
             showMessage('Please fill in all valid booking details.', 'error');
             return;
         }
@@ -161,31 +162,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // --- Simulate Payment Gateway Process (client-side) ---
-            // In a real app, this would be a secure, server-side payment integration
-            console.log('Simulating payment for:', { fuelType, quantity, timeSlot, station: selectedStation.name });
-            await new Promise(resolve => setTimeout(resolve, 2500)); // Simulate payment processing delay
+            console.log('Simulating payment for:', { fuelType, vehicleType, quantity, timeSlot, station: selectedStation.name });
+            await new Promise(resolve => setTimeout(resolve, 2500));
 
-            // Assume payment is successful and get a payment ID/receipt
             const simulatedPaymentAmount = quantity * 100; // Example: ₹100 per unit/liter
-            const simulatedPaymentId = `PAY-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
 
             // --- Send Booking Data to Backend API ---
-            const token = localStorage.getItem('token'); // Get JWT token from localStorage
+            const token = localStorage.getItem('token');
 
             const response = await fetch('/api/bookings', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` // Send JWT token for authentication
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    stationId: selectedStation._id, // Use MongoDB _id
+                    stationId: selectedStation._id,
                     fuelType,
+                    vehicleType, // Include vehicle type in the request
                     quantity,
                     timeSlot,
                     bookingDate,
                     paymentAmount: simulatedPaymentAmount,
-                    paymentStatus: 'paid' // Set as paid after simulated payment
+                    paymentStatus: 'paid'
                 })
             });
 
@@ -193,13 +192,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 showMessage(data.message || 'Booking successful! Generating your token...', 'success');
-                const newBooking = data.data; // Get the created booking data from backend
+                const newBooking = data.data;
 
                 // Populate Token Section with data from backend
                 tokenWaitTimeElem.textContent = `${newBooking.estimatedWaitTime} mins.`;
                 tokenNumberElem.textContent = newBooking.tokenNumber;
-                tokenUserNameElem.textContent = currentUser.username; // Use actual username
+                tokenUserNameElem.textContent = currentUser.username;
                 tokenUserPhoneElem.textContent = currentUser.phoneNumber || 'N/A';
+                tokenVehicleTypeElem.textContent = `Vehicle: ${newBooking.vehicleType.charAt(0).toUpperCase() + newBooking.vehicleType.slice(1)}`; // Display vehicle type
                 tokenBrandLogo.src = selectedStation.logoUrl;
                 tokenBrandLogo.alt = `${selectedStation.brand} Logo`;
 
@@ -207,6 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     token: newBooking.tokenNumber,
                     stationId: newBooking.station,
                     fuelType: newBooking.fuelType,
+                    vehicleType: newBooking.vehicleType, // Include vehicle type in QR
                     quantity: newBooking.quantity,
                     timeSlot: newBooking.timeSlot,
                     user: currentUser.username,
@@ -241,13 +242,15 @@ document.addEventListener('DOMContentLoaded', () => {
             link.download = `MyFuel_Token_${tokenNumberElem.textContent}.png`;
             link.href = qrCodeCanvas.toDataURL('image/png');
             link.click();
-            showMessage('QR Code downloaded!', 'success');
+            alert('QR Code downloaded! For a full token image, a backend PDF generation would be ideal.'); // Using alert for simplicity, replace with custom modal
         } else {
             showMessage('Failed to generate token image for download.', 'error');
         }
     });
 
     // --- Initial Load ---
-    loadUserData(); // Load user data first
-    fetchStationDetails(); // Then fetch station details
+    loadUserData();
+    if (currentUser) {
+        fetchStationDetails();
+    }
 });

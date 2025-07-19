@@ -60,11 +60,11 @@
                            placeholder="e.g., 1000">
                 </div>
                 <div>
-                    <label for="odometer" class="block text-gray-700 text-sm font-semibold mb-2">Odometer Reading (KM):</label>
+                    <label for="odometer" class="block text-gray-700 text-sm font-semibold mb-2">Current Odometer Reading (KM):</label>
                     <input type="number" id="odometer" name="odometer" min="0" step="1"
                            class="w-full p-3 border border-gray-300 rounded-md bg-gray-100 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                            placeholder="e.g., 50000">
-                    <p class="text-xs text-gray-500 mt-1">Used to calculate average daily travel and give notifications.</p>
+                    <p class="text-xs text-gray-500 mt-1">Enter current odometer to calculate travel and mileage.</p>
                 </div>
                 <button type="submit"
                         class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 transform hover:scale-105 transition duration-300 ease-in-out shadow-md">
@@ -82,7 +82,7 @@
             <!-- Summary Section -->
             <section class="mb-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
                 <h3 class="text-2xl font-semibold text-gray-800 mb-4">Summary:</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <p class="text-gray-600 text-lg">Total Spent (Last 30 Days):</p>
                         <p id="totalSpent" class="text-3xl font-bold text-green-600">₹ 0.00</p>
@@ -90,6 +90,10 @@
                     <div>
                         <p class="text-gray-600 text-lg">Avg. Daily Travel (KM):</p>
                         <p id="avgDailyTravel" class="text-3xl font-bold text-purple-600">0 KM</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600 text-lg">Avg. Mileage (KM/₹):</p>
+                        <p id="avgMileage" class="text-3xl font-bold text-orange-600">0.00 KM/₹</p>
                     </div>
                 </div>
                 <div id="notificationArea" class="mt-4 p-3 rounded-md text-center hidden" role="alert">

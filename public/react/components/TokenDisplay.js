@@ -1,7 +1,7 @@
 // public/react/components/TokenDisplay.js
 
 import React, { useEffect, useRef } from 'react';
-import QRious from 'qrious';
+import QRious from 'qrious'; // Import QRious for QR code generation
 
 function TokenDisplay({ token }) {
     const qrCanvasRef = useRef(null);
@@ -13,6 +13,7 @@ function TokenDisplay({ token }) {
                 token: token.tokenNumber,
                 station: token.stationName,
                 type: token.type,
+                vehicle: token.vehicleType, // Include vehicle type
                 user: token.userName,
                 phone: token.userPhone
             });
@@ -22,11 +23,11 @@ function TokenDisplay({ token }) {
                 value: qrData,
                 size: 150,
                 padding: 10,
-                level: 'H',
-                foreground: '#1F2937'
+                level: 'H', // High error correction
+                foreground: '#1F2937' // Dark gray for QR code
             });
         }
-    }, [token]);
+    }, [token]); // Re-generate QR code if token data changes
 
     const handleDownloadToken = () => {
         if (qrCanvasRef.current) {
@@ -34,15 +35,12 @@ function TokenDisplay({ token }) {
             link.download = `MyFuel_Token_${token.tokenNumber}.png`;
             link.href = qrCanvasRef.current.toDataURL('image/png');
             link.click();
-            // Using alert for simplicity, replace with custom modal
-            // In a real app, a more robust "download token" would likely involve
-            // generating a PDF on the backend with all token details and QR.
-            alert('QR Code downloaded! For a full token image, a backend PDF generation would be ideal.');
+            alert('QR Code downloaded! For a full token image, a backend PDF generation would be ideal.'); // Using alert for simplicity, replace with custom modal
         }
     };
 
     if (!token) {
-        return null;
+        return null; // Or a placeholder if no token is active
     }
 
     return (
@@ -61,7 +59,8 @@ function TokenDisplay({ token }) {
                     <p className="text-gray-600 text-sm">TOKEN NUMBER</p>
                     <p className="token-number">{token.tokenNumber}</p>
                     <p className="text-xl font-semibold text-gray-800 mb-2">{token.userName}</p>
-                    <p className="text-lg text-gray-700 mb-4">{token.userPhone}</p>
+                    <p className="text-lg text-gray-700 mb-2">{token.userPhone}</p>
+                    <p className="text-md text-gray-600 mb-4">Vehicle: {token.vehicleType.charAt(0).toUpperCase() + token.vehicleType.slice(1)}</p> {/* Display vehicle type */}
 
                     {/* QR Code Canvas */}
                     <canvas ref={qrCanvasRef} className="mx-auto border border-gray-300 rounded-md shadow-sm" width="150" height="150"></canvas>

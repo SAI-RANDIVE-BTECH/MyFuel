@@ -1,4 +1,3 @@
-// server/models/Booking.js - Mongoose Schema for Bookings
 // server/models/Booking.js - Mongoose Schema for Booking
 
 const mongoose = require('mongoose');
@@ -18,6 +17,11 @@ const BookingSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please specify fuel/charging type'],
         enum: ['petrol', 'diesel', 'cng', 'ev']
+    },
+    vehicleType: { // New field for vehicle type
+        type: String,
+        required: [true, 'Please specify vehicle type'],
+        enum: ['car', 'bike', 'auto', 'truck', 'other']
     },
     quantity: { // Amount of fuel/charging units
         type: Number,

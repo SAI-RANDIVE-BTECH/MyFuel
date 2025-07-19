@@ -1,4 +1,3 @@
-// server/routes/auth.js - Authentication routes
 // server/routes/auth.js - User Authentication Routes
 
 const express = require('express');
@@ -11,7 +10,7 @@ const router = express.Router();
 // --- Helper function to generate JWT token ---
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: '1h', // Token expires in 1 hour
+        expiresIn: '7d', // <--- CHANGED: Token now expires in 7 days
     });
 };
 
