@@ -1,56 +1,94 @@
-/* Booking CSS content goes here */
 /* Custom CSS for booking.html - MyFuel Theme */
+
+/* Color Palette Variables (ensure consistency) */
+:root {
+    --color-primary-dark: #54162B;
+    --color-accent-red: #B4182D;
+    --color-soft-orange: #FDA481;
+    --color-dark-blue-gray-text: #37415C;
+    --color-darker-blue-gray-elements: #242E49;
+    --color-deepest-blue-gray-bg: #181A2F;
+    --color-light-bg: #F9FAFB;
+    --color-white: #FFFFFF;
+}
 
 /* General body styling for consistency */
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #F9FAFB; /* bg-gray-50 */
-    color: #1F2937; /* text-gray-900 */
+    background-color: var(--color-deepest-blue-gray-bg);
+    color: var(--color-light-bg);
 }
 
 /* Navigation bar styling */
 nav {
-    border-bottom: 1px solid #E5E7EB; /* border-gray-200 */
+    background-color: var(--color-white);
+    border-bottom: 1px solid #E5E7EB;
+}
+nav a {
+    color: var(--color-dark-blue-gray-text);
+}
+nav a:hover {
+    color: var(--color-accent-red);
+}
+nav .text-blue-700 {
+    color: var(--color-primary-dark);
 }
 
 /* Form container styling */
-.bg-white {
-    background-color: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+.bg-white { /* Main booking form container */
+    background-color: var(--color-darker-blue-gray-elements);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.06);
+    color: var(--color-light-bg);
 }
+.bg-gray-50 { /* Station details section within the form */
+    background-color: var(--color-dark-blue-gray-text); /* Use a darker shade for inner sections */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--color-light-bg);
+}
+.bg-gray-50 h3, .bg-gray-50 p, .bg-gray-50 span {
+    color: var(--color-white); /* Ensure text is white on dark blue-gray */
+}
+
 
 /* Input/Select field styling */
 input[type="number"],
 select {
-    background-color: #F3F4F6; /* bg-gray-100 */
-    border: 1px solid #D1D5DB; /* border-gray-300 */
-    color: #1F2937;
+    background-color: var(--color-deepest-blue-gray-bg); /* Darker input fields */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--color-light-bg);
+}
+
+input[type="number"]::placeholder,
+select option {
+    color: #A0AEC0; /* Lighter placeholder text */
 }
 
 input[type="number"]:focus,
 select:focus {
-    border-color: #3B82F6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    border-color: var(--color-soft-orange);
+    box-shadow: 0 0 0 2px rgba(253, 164, 129, 0.3);
+}
+select option {
+    background-color: var(--color-deepest-blue-gray-bg); /* Ensure options are readable */
 }
 
 /* Button styling */
 button {
-    background-color: #2563EB; /* bg-blue-700 */
-    color: #FFFFFF;
+    background-color: var(--color-accent-red);
+    color: var(--color-white);
 }
 
 button:hover {
-    background-color: #1D4ED8; /* hover:bg-blue-800 */
+    background-color: var(--color-primary-dark);
+    box-shadow: 0 0 15px rgba(180, 24, 45, 0.6);
 }
 
-button:focus {
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4);
-}
-
-/* Message Box Styling (re-using styles from auth.css for consistency) */
+/* Message Box Styling */
 #messageBox {
     font-weight: 500;
+    margin-top: 1.5rem;
+    border-radius: 0.5rem;
 }
 #messageBox.success {
     background-color: #D1FAE5;
@@ -68,12 +106,14 @@ button:focus {
     border: 1px solid #93C5FD;
 }
 
-/* --- Token Specific Styles and Animations --- */
+/* --- Token Specific Styles and Animations (Updated Colors) --- */
 
 /* Token Section Container */
 #tokenSection {
-    position: relative;
-    overflow: hidden; /* For the gradient flow animation */
+    background-color: var(--color-darker-blue-gray-elements); /* Token background */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); /* Deeper shadow */
+    color: var(--color-light-bg);
 }
 
 /* Gradient flow animation for top/bottom borders */
@@ -95,7 +135,7 @@ button:focus {
 .animate-token-slide-in {
     animation: tokenSlideIn 0.8s ease-out forwards;
     animation-delay: 0.2s;
-    opacity: 0; /* Start hidden */
+    opacity: 0;
 }
 
 /* Wait time pulse animation */
@@ -115,19 +155,47 @@ button:focus {
 }
 .animate-scale-in {
     animation: scaleIn 0.5s ease-out forwards;
-    animation-delay: 0.8s; /* After token section slides in */
-    opacity: 0; /* Start hidden */
+    animation-delay: 0.8s;
+    opacity: 0;
 }
 
-/* QR Code Canvas Styling */
-#qrCodeCanvas {
-    display: block; /* Ensure it's a block element for mx-auto to work */
+/* Token content background */
+.bg-gray-50 { /* Inner token content background */
+    background-color: var(--color-dark-blue-gray-text); /* Darker inner background */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--color-light-bg);
 }
+.bg-gray-50 p, .bg-gray-50 span {
+    color: var(--color-white); /* Ensure text is white on dark blue-gray */
+}
+
+.token-wait-time {
+    color: var(--color-soft-orange); /* Soft orange for wait time */
+}
+.token-number {
+    color: var(--color-white); /* White for token number */
+}
+.token-user-name, .token-user-phone, .token-vehicle-type {
+    color: #E5E7EB; /* Lighter gray for user details */
+}
+.qr-code-canvas {
+    background-color: var(--color-white); /* White background for QR code */
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Download Token Button */
+#downloadTokenButton {
+    background-color: #10B981; /* Green color for download */
+}
+#downloadTokenButton:hover {
+    background-color: #059669; /* Darker green on hover */
+}
+
 
 /* Responsive adjustments */
 @media (max-width: 640px) {
     .max-w-2xl, .max-w-md {
-        max-width: 95%; /* Adjust width for very small screens */
+        max-width: 95%;
     }
     .text-4xl {
         font-size: 2.5rem;

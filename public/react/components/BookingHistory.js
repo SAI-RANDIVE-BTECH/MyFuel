@@ -15,6 +15,7 @@ function BookingHistory({ bookings }) {
                             <div>
                                 <p className="font-semibold text-gray-800 text-lg">{booking.station.name}</p> {/* Access station name from populated object */}
                                 <p className="text-sm text-gray-600">{booking.fuelType} - ₹ {booking.paymentAmount.toFixed(2)}</p>
+                                <p className="text-xs text-gray-500">Vehicle: {booking.vehicleType}</p> {/* Display vehicle type */}
                             </div>
                             <div className="text-right">
                                 <p className="text-sm text-gray-500">{new Date(booking.bookingDate).toLocaleDateString()}</p>

@@ -1,26 +1,47 @@
-/* Dashboard CSS content goes here */
 /* Custom CSS for dashboard.html and React Components - MyFuel Theme */
+
+/* Color Palette Variables (ensure consistency) */
+:root {
+    --color-primary-dark: #54162B;
+    --color-accent-red: #B4182D;
+    --color-soft-orange: #FDA481;
+    --color-dark-blue-gray-text: #37415C;
+    --color-darker-blue-gray-elements: #242E49;
+    --color-deepest-blue-gray-bg: #181A2F;
+    --color-light-bg: #F9FAFB;
+    --color-white: #FFFFFF;
+}
 
 /* General body styling for consistency */
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #F9FAFB; /* bg-gray-50 */
-    color: #1F2937; /* text-gray-900 */
+    background-color: var(--color-deepest-blue-gray-bg);
+    color: var(--color-light-bg);
 }
 
 /* Navigation bar styling */
 nav {
-    border-bottom: 1px solid #E5E7EB; /* border-gray-200 */
+    background-color: var(--color-white);
+    border-bottom: 1px solid #E5E7EB;
+}
+nav a {
+    color: var(--color-dark-blue-gray-text);
+}
+nav a:hover {
+    color: var(--color-accent-red);
+}
+nav .text-blue-700 {
+    color: var(--color-primary-dark);
 }
 
 /* Base card styling for React components */
 .dashboard-card {
-    background-color: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    border-radius: 0.75rem; /* rounded-xl */
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    padding: 1.5rem; /* p-6 */
+    background-color: var(--color-darker-blue-gray-elements);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.06);
+    padding: 1.5rem;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    color: var(--color-light-bg);
 }
 
 .dashboard-card:hover {
@@ -30,75 +51,63 @@ nav {
 
 /* Headings within dashboard cards */
 .dashboard-card h3 {
-    font-size: 1.875rem; /* text-3xl */
-    font-weight: 700; /* font-bold */
-    color: #1F2937; /* text-gray-900 */
-    margin-bottom: 1rem; /* mb-4 */
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--color-white);
+    margin-bottom: 1rem;
 }
 
 /* List item styling within dashboard components */
 .dashboard-list-item {
-    padding: 0.75rem 0; /* py-3 */
-    border-bottom: 1px solid #E5E7EB; /* border-gray-200 */
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: #CBD5E1; /* Light text for list items */
 }
 
 .dashboard-list-item:last-child {
     border-bottom: none;
 }
+.dashboard-list-item .font-semibold {
+    color: var(--color-soft-orange); /* Accent for main item text */
+}
+.dashboard-list-item .text-sm {
+    color: #A0AEC0; /* Lighter text for sub-details */
+}
+
 
 /* Buttons within dashboard */
 .dashboard-btn {
-    background-color: #2563EB; /* bg-blue-700 */
-    color: #FFFFFF;
-    font-weight: 600; /* font-semibold */
-    padding: 0.75rem 1.5rem; /* py-3 px-6 */
-    border-radius: 0.5rem; /* rounded-md */
+    background-color: var(--color-accent-red);
+    color: var(--color-white);
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
     transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 
 .dashboard-btn:hover {
-    background-color: #1D4ED8; /* hover:bg-blue-800 */
+    background-color: var(--color-primary-dark);
     transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(180, 24, 45, 0.6);
 }
 
 /* Specific styles for TokenDisplay */
 .token-display-card {
-    background-color: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    border-radius: 0.75rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* Deeper shadow */
+    background-color: var(--color-darker-blue-gray-elements);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
     padding: 2rem;
     position: relative;
     overflow: hidden;
+    color: var(--color-light-bg);
 }
 
-.token-display-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 8px;
-    background: linear-gradient(90deg, #3B82F6, #8B5CF6); /* blue-500 to purple-500 */
-    border-radius: 0.75rem 0.75rem 0 0;
-    animation: gradientFlow 4s ease infinite;
-    background-size: 200% 200%;
-}
-
+.token-display-card::before,
 .token-display-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 8px;
-    background: linear-gradient(90deg, #3B82F6, #8B5CF6); /* blue-500 to purple-500 */
-    border-radius: 0 0 0.75rem 0.75rem;
-    animation: gradientFlow 4s ease infinite reverse;
-    background-size: 200% 200%;
+    background: linear-gradient(90deg, var(--color-soft-orange), var(--color-accent-red)); /* New gradient colors */
 }
 
 @keyframes gradientFlow {
@@ -108,12 +117,7 @@ nav {
 }
 
 .token-wait-time {
-    font-size: 4rem; /* text-6xl */
-    font-weight: 800; /* font-extrabold */
-    color: #2563EB; /* text-blue-700 */
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    animation: pulseWaitTime 2s ease-in-out infinite;
+    color: var(--color-soft-orange); /* Soft orange for wait time */
 }
 
 @keyframes pulseWaitTime {
@@ -122,11 +126,31 @@ nav {
 }
 
 .token-number {
-    font-size: 3rem; /* text-5xl */
-    font-weight: 800; /* font-extrabold */
-    letter-spacing: 0.05em; /* tracking-wider */
-    color: #1F2937; /* text-gray-900 */
-    margin-bottom: 1rem;
+    color: var(--color-white); /* White for token number */
+}
+
+.token-display-card .bg-gray-50 { /* Inner token content background */
+    background-color: var(--color-dark-blue-gray-text);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--color-light-bg);
+}
+.token-display-card .bg-gray-50 p, .token-display-card .bg-gray-50 span {
+    color: var(--color-white);
+}
+
+/* QR Code Canvas */
+canvas {
+    background-color: var(--color-white); /* White background for QR code */
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Download Token Button (Green) */
+.dashboard-btn.bg-green-600 {
+    background-color: #10B981; /* Tailwind green-600 */
+}
+.dashboard-btn.bg-green-600:hover {
+    background-color: #059669; /* Tailwind green-700 */
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
 }
 
 /* Responsive adjustments */

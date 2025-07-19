@@ -4,12 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('MyFuel Map page loaded successfully!');
 
     const mapElement = document.getElementById('map');
-    // Renamed from findMeButton to locateMeButton as per map.html
-    const locateMeButton = document.getElementById('locateMeButton'); // <--- CHANGED ID REFERENCE
+    const locateMeButton = document.getElementById('locateMeButton');
     const fuelTypeFilter = document.getElementById('fuelTypeFilter');
-    // findNearestButton is not used for a separate action, its logic is integrated with locateMeButton
-    // const findNearestButton = document.getElementById('findNearestButton'); // Removed direct reference
+    const brandFilter = document.getElementById('brandFilter'); // Ensure brand filter is also used
+    const applyFiltersButton = document.getElementById('applyFiltersButton');
     const mapMessageBox = document.getElementById('mapMessageBox'); // Message box for map
+
+    // Ensure stationList is correctly referenced (it's in the HTML now)
+    const stationListElement = document.getElementById('stationList');
 
     let map;
     let userMarker;
@@ -18,11 +20,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Utility function to display messages for map page ---
     function showMapMessage(message, type = 'error') {
-        mapMessageBox.textContent = message;
-        mapMessageBox.className = `mt-4 p-3 rounded-md text-center ${type} block`;
-        setTimeout(() => {
-            mapMessageBox.classList.add('hidden');
-        }, 5000);
+        if (mapMessageBox) { // Ensure element exists before using
+            mapMessageBox.textContent = message;
+            // Use Tailwind classes directly for message box styling
+            mapMessageBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'border-green-200',
+                                        'bg-red-100', 'text-red-800', 'border-red-200',
+                                        'bg-blue-100', 'text-blue-800', 'border-blue-200');
+            if (type === 'success') {
+                mapMessageBox.classList.add('bg-green-100', 'text-green-800', 'border-green-200');
+            } else if (type === 'error') {
+                mapMessageBox.classList.add('bg-red-100', 'text-red-800', 'border-red-200');
+            } else if (type === 'info') {
+                mapMessageBox.classList.add('bg-blue-100', 'text-blue-800', 'border-blue-200');
+            }
+            mapMessageBox.classList.add('block'); // Show it
+            setTimeout(() => {
+                mapMessageBox.classList.add('hidden');
+            }, 5000);
+        } else {
+            console.error("Map message box element not found.");
+        }
     }
 
     // --- Initialize Map ---
@@ -82,16 +99,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Fetch Stations from Backend API ---
     async function fetchAndDisplayStations(userLat = null, userLng = null) {
-        stationList.innerHTML = '<p class="text-gray-500 text-center">Loading stations...</p>';
+        if (stationListElement) {
+            stationListElement.innerHTML = '<p class="text-gray-500 text-center">Loading stations...</p>';
+        }
         stationMarkers.clearLayers(); // Clear existing markers
 
         const selectedFuelType = fuelTypeFilter.value;
+        const selectedBrand = brandFilter.value; // Get selected brand
 
         let apiUrl = '/api/stations'; // Base API endpoint
         const params = new URLSearchParams();
 
         if (selectedFuelType !== 'all') {
             params.append('type', selectedFuelType);
+        }
+        if (selectedBrand !== 'all') { // Add brand filter to params
+            params.append('brand', selectedBrand);
         }
 
         if (userLat !== null && userLng !== null) {
@@ -104,13 +127,18 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch(`${apiUrl}?${params.toString()}`);
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                // Read error message from backend if available
+                const errorData = await response.json();
+                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
             currentStationsData = data.data;
 
             if (currentStationsData.length === 0) {
-                stationList.innerHTML = '<p class="text-gray-500 text-center mt-4">No stations found matching your criteria.</p>';
+                if (stationListElement) {
+                    stationListElement.innerHTML = '<p class="text-gray-500 text-center mt-4">No stations found matching your criteria.</p>';
+                }
+                showMapMessage('No stations found matching your criteria.', 'info');
                 return;
             }
 
@@ -124,29 +152,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             renderStations(currentStationsData, userLat, userLng);
+            showMapMessage('Stations loaded successfully!', 'success');
 
         } catch (error) {
             console.error('Error fetching stations from backend:', error);
-            showMapMessage('Failed to load stations. Please try again later.', 'error');
-            stationList.innerHTML = '<p class="text-red-600 text-center mt-4">Failed to load stations. Please try again later.</p>';
+            showMapMessage(`Failed to load stations: ${error.message}. Please try again later.`, 'error');
+            if (stationListElement) {
+                stationListElement.innerHTML = '<p class="text-red-600 text-center mt-4">Failed to load stations. Please try again later.</p>';
+            }
         }
     }
 
     // --- Render Stations on Map and List ---
     function renderStations(stationsToRender, userLat = null, userLng = null) {
         stationMarkers.clearLayers(); // Clear existing station markers
-        stationList.innerHTML = ''; // Clear existing list (if you re-add a list section in HTML)
-
-        // The station list div is missing from map.html. Let's ensure it exists or remove its reference.
-        // For now, I'll assume you will re-add a station list section to map.html.
-        // If not, remove the `stationList.innerHTML = '';` and related code.
-        const stationListElement = document.getElementById('stationList');
         if (stationListElement) {
-            stationListElement.innerHTML = ''; // Clear previous list
-        } else {
-            console.warn("Element with ID 'stationList' not found. Station list will not be displayed.");
+            stationListElement.innerHTML = ''; // Clear existing list
         }
-
 
         if (stationsToRender.length === 0) {
             if (stationListElement) {
@@ -159,9 +181,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const stationLat = station.location.coordinates[1];
             const stationLng = station.location.coordinates[0];
 
-            const marker = L.marker([stationLat, stationLng]).addTo(stationMarkers);
+            // Custom icon for stations (optional, can use different icons for types)
+            const customIcon = L.icon({
+                iconUrl: station.logoUrl || 'https://placehold.co/32x32/ffffff/000000?text=S', // Use station logo or a default
+                iconSize: [32, 32], // size of the icon
+                iconAnchor: [16, 32], // point from which the icon will be anchored
+                popupAnchor: [0, -32] // point from which the popup should open relative to the iconAnchor
+            });
+
+            const marker = L.marker([stationLat, stationLng], { icon: customIcon }).addTo(stationMarkers);
             marker.bindPopup(`
-                <div class="font-inter">
+                <div class="font-inter text-gray-900">
                     <h4 class="font-bold text-lg mb-1">${station.name}</h4>
                     <p class="text-sm text-gray-700">Type: <span class="font-medium capitalize">${station.type}</span></p>
                     <p class="text-sm text-gray-700">Brand: <span class="font-medium">${station.brand}</span></p>
@@ -174,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `);
 
-            // If a station list element exists, add cards to it
+            // Add to station list
             if (stationListElement) {
                 const stationCard = document.createElement('div');
                 stationCard.className = 'station-card'; // Assuming you have .station-card styles in map.css
@@ -213,16 +243,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Event Listeners ---
-    // Changed from findMeButton to locateMeButton
-    if (locateMeButton) { // Ensure button exists before adding listener
+    if (locateMeButton) {
         locateMeButton.addEventListener('click', getUserLocation);
     } else {
         console.error("Element with ID 'locateMeButton' not found.");
     }
 
-    // The 'Apply Filters' button is part of the filter section in map.html
-    // and its ID is 'applyFiltersButton'. Let's ensure it's correctly referenced.
-    const applyFiltersButton = document.getElementById('applyFiltersButton');
     if (applyFiltersButton) {
         applyFiltersButton.addEventListener('click', () => {
             if (userMarker && userMarker.getLatLng()) {

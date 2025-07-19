@@ -13,6 +13,16 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            /* New palette colors for body background and text */
+            background-color: #181A2F; /* --color-deepest-blue-gray-bg */
+            color: #F9FAFB; /* Light text for dark background */
+        }
+        /* Override Tailwind's default text-gray-900 for h1, etc. if needed */
+        h1, h2, h3 {
+            color: #F9FAFB; /* Ensure headings are visible on dark background */
+        }
+        .text-gray-600 { /* Adjust for paragraphs on dark background */
+            color: #D1D5DB; /* Light gray for paragraphs */
         }
     </style>
 </head>
@@ -26,7 +36,7 @@
                 <li><a href="/map" class="text-lg font-medium text-gray-700 hover:text-blue-700 transition duration-300">Find Stations</a></li>
                 <li><a href="/expense-tracker" class="text-lg font-medium text-gray-700 hover:text-blue-700 transition duration-300">Expenses</a></li>
                 <li><a href="/login" class="text-lg font-medium text-gray-700 hover:text-blue-700 transition duration-300">Login</a></li>
-                <li><a href="/dashboard" class="text-lg font-medium text-blue-700 transition duration-300">Dashboard</a></li>
+                <li><a href="/dashboard" class="text-lg font-medium text-gray-700 hover:text-blue-700 transition duration-300">Dashboard</a></li>
             </ul>
         </div>
     </nav>

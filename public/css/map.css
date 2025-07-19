@@ -1,5 +1,16 @@
-/* Map CSS content goes here */
 /* Custom CSS for map.html - MyFuel Theme */
+
+/* Color Palette Variables (ensure consistency) */
+:root {
+    --color-primary-dark: #54162B;
+    --color-accent-red: #B4182D;
+    --color-soft-orange: #FDA481;
+    --color-dark-blue-gray-text: #37415C;
+    --color-darker-blue-gray-elements: #242E49;
+    --color-deepest-blue-gray-bg: #181A2F;
+    --color-light-bg: #F9FAFB;
+    --color-white: #FFFFFF;
+}
 
 /* Keyframe Animations */
 @keyframes fadeIn {
@@ -9,12 +20,12 @@
 
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes slideInRight {
     from { opacity: 0; transform: translateX(20px); }
-    to { opacity: 1; transform: translateX(0); }
+    to { transform: translateX(0); opacity: 1; }
 }
 
 /* Apply animations */
@@ -31,15 +42,68 @@
 /* General body styling for consistency */
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #F9FAFB; /* bg-gray-50 */
-    color: #1F2937; /* text-gray-900 */
+    background-color: var(--color-deepest-blue-gray-bg); /* Dark background */
+    color: var(--color-light-bg); /* Light text */
+}
+
+/* Navigation bar styling */
+nav {
+    background-color: var(--color-white); /* White nav bar */
+    border-bottom: 1px solid #E5E7EB; /* border-gray-200 */
+}
+nav a { /* Adjust nav links for new theme */
+    color: var(--color-dark-blue-gray-text);
+}
+nav a:hover {
+    color: var(--color-accent-red); /* Hover accent */
+}
+nav .text-blue-700 { /* MyFuel logo text */
+    color: var(--color-primary-dark);
+}
+
+/* Main content area headings */
+main h1, main h2 {
+    color: var(--color-white); /* White headings on dark background */
+}
+
+/* Map Container and Filters/List Panel */
+.bg-white { /* For the main map container and filter panel */
+    background-color: var(--color-darker-blue-gray-elements); /* Darker background for panels */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle light border */
+    color: var(--color-light-bg); /* Light text inside panels */
+}
+
+/* Buttons */
+button {
+    background-color: var(--color-accent-red);
+    color: var(--color-white);
+}
+button:hover {
+    background-color: var(--color-primary-dark);
+    box-shadow: 0 0 15px rgba(180, 24, 45, 0.6);
+}
+
+/* Select/Input fields in filters */
+select {
+    background-color: var(--color-dark-blue-gray-text); /* Darker background for select */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Lighter border */
+    color: var(--color-light-bg); /* Light text */
+}
+select:focus {
+    border-color: var(--color-soft-orange);
+    box-shadow: 0 0 0 2px rgba(253, 164, 129, 0.3);
+}
+select option {
+    background-color: var(--color-darker-blue-gray-elements); /* Ensure options are readable */
+    color: var(--color-light-bg);
 }
 
 /* Map container specific styling */
 #map {
     height: 500px; /* Default height for the map */
     width: 100%;
-    z-index: 0; /* Ensure map is behind other elements if any */
+    z-index: 0;
+    border-color: rgba(255, 255, 255, 0.2); /* Light border for map */
 }
 
 /* Adjust map height for larger screens */
@@ -55,32 +119,55 @@ body {
 }
 
 .overflow-y-auto::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--color-darker-blue-gray-elements);
     border-radius: 10px;
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb {
-    background: #cbd5e1; /* gray-300 */
+    background: var(--color-dark-blue-gray-text);
     border-radius: 10px;
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8; /* gray-400 */
+    background: var(--color-primary-dark);
 }
 
-/* Station card styling */
+/* Station card styling (within the list) */
 .station-card {
-    background-color: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    border-radius: 0.75rem; /* rounded-xl */
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow-sm */
-    padding: 1.5rem; /* p-6 */
+    background-color: var(--color-dark-blue-gray-text); /* Slightly lighter dark for cards */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    padding: 1.5rem;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .station-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+.station-card h4 {
+    color: var(--color-soft-orange); /* Soft orange for station names */
+}
+.station-card p {
+    color: #CBD5E1; /* Lighter text for details */
+}
+.station-card .text-blue-600 { /* Wait time text */
+    color: var(--color-soft-orange);
+}
+.station-card button { /* Book slot button in card */
+    background-color: var(--color-accent-red);
+}
+.station-card button:hover {
+    background-color: var(--color-primary-dark);
+}
+
+
+/* Footer Adjustments */
+footer {
+    background-color: var(--color-darker-blue-gray-elements); /* Darker footer */
+    color: #A0AEC0; /* Lighter text for footer */
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Responsive adjustments for smaller screens */

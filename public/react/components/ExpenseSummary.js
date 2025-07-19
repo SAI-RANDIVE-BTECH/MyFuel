@@ -5,35 +5,42 @@ import React, { useState, useEffect } from 'react';
 function ExpenseSummary({ expenses, userSettings }) {
     const [totalSpentLast30Days, setTotalSpentLast30Days] = useState(0);
     const [avgDailyTravel, setAvgDailyTravel] = useState(0);
+    const [avgMileage, setAvgMileage] = useState(0); // New state for average mileage
     const [notification, setNotification] = useState(null);
 
     useEffect(() => {
         calculateSummary();
-    }, [expenses, userSettings]); // Recalculate when expenses or userSettings change
+    }, [expenses, userSettings]);
 
     const calculateSummary = () => {
         let currentTotalSpent = 0;
-        let totalKmTravelled = 0;
-        let lastOdometerForCalc = userSettings?.lastOdometerReading || 0; // Use user's last odometer from settings
+        let totalKmTravelledOverall = 0;
+        let totalAmountOverall = 0;
 
         const thirtyDaysAgo = new Date();
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-        // Sort expenses by date ascending for odometer calculation
-        const sortedExpensesAsc = [...expenses].sort((a, b) => new Date(a.date) - new Date(b.date));
+        const expensesWithOdometer = expenses.filter(exp => exp.odometer !== null).sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        // Calculate total KM traveled between consecutive odometer readings
-        for (let i = 0; i < sortedExpensesAsc.length; i++) {
-            const expense = sortedExpensesAsc[i];
+        let lastOdometerForCalc = userSettings?.lastOdometerReading || 0;
+        if (expensesWithOdometer.length > 0 && expensesWithOdometer[0].odometer !== null) {
+            lastOdometerForCalc = expensesWithOdometer[0].odometer;
+        }
+
+
+        for (let i = 0; i < expensesWithOdometer.length; i++) {
+            const expense = expensesWithOdometer[i];
+            if (expense.odometer !== null && lastOdometerForCalc !== null && expense.odometer > lastOdometerForCalc) {
+                const kmDiff = expense.odometer - lastOdometerForCalc;
+                totalKmTravelledOverall += kmDiff;
+                totalAmountOverall += expense.amount;
+            }
             if (expense.odometer !== null) {
-                if (lastOdometerForCalc > 0 && expense.odometer > lastOdometerForCalc) {
-                    totalKmTravelled += (expense.odometer - lastOdometerForCalc);
-                }
                 lastOdometerForCalc = expense.odometer;
             }
         }
 
-        // Calculate total spent for the last 30 days
+
         expenses.forEach(expense => {
             const expenseDate = new Date(expense.date);
             if (expenseDate >= thirtyDaysAgo) {
@@ -43,13 +50,12 @@ function ExpenseSummary({ expenses, userSettings }) {
 
         setTotalSpentLast30Days(currentTotalSpent);
 
-        // Calculate average daily travel over the entire period of recorded expenses
         let calculatedAvgDailyTravel = 0;
-        if (sortedExpensesAsc.length > 1 && sortedExpensesAsc[0].odometer !== null && sortedExpensesAsc[sortedExpensesAsc.length - 1].odometer !== null) {
-            const firstOdometer = sortedExpensesAsc[0].odometer;
-            const lastOdometer = sortedExpensesAsc[sortedExpensesAsc.length - 1].odometer;
-            const firstDate = new Date(sortedExpensesAsc[0].date);
-            const lastDate = new Date(sortedExpensesAsc[sortedExpensesAsc.length - 1].date);
+        if (expensesWithOdometer.length > 1) {
+            const firstOdometer = expensesWithOdometer[0].odometer;
+            const lastOdometer = expensesWithOdometer[expensesWithOdometer.length - 1].odometer;
+            const firstDate = new Date(expensesWithOdometer[0].date);
+            const lastDate = new Date(expensesWithOdometer[expensesWithOdometer.length - 1].date);
 
             const daysDiff = Math.ceil(Math.abs(lastDate - firstDate) / (1000 * 60 * 60 * 24));
 
@@ -59,7 +65,12 @@ function ExpenseSummary({ expenses, userSettings }) {
         }
         setAvgDailyTravel(parseInt(calculatedAvgDailyTravel));
 
-        // Display notification based on user's daily travel target
+        let overallAvgMileage = 0;
+        if (totalKmTravelledOverall > 0 && totalAmountOverall > 0) {
+            overallAvgMileage = totalKmTravelledOverall / totalAmountOverall;
+        }
+        setAvgMileage(overallAvgMileage);
+
         if (userSettings && userSettings.dailyTravelTarget) {
             displayTravelNotification(parseInt(calculatedAvgDailyTravel), userSettings.dailyTravelTarget);
         }
@@ -89,7 +100,7 @@ function ExpenseSummary({ expenses, userSettings }) {
     return (
         <div className="dashboard-card">
             <h3 className="text-3xl font-bold text-gray-800 mb-6">Expense Summary</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div>
                     <p className="text-gray-600 text-lg">Total Spent (Last 30 Days):</p>
                     <p className="text-3xl font-bold text-green-600">₹ {totalSpentLast30Days.toFixed(2)}</p>
@@ -97,6 +108,10 @@ function ExpenseSummary({ expenses, userSettings }) {
                 <div>
                     <p className="text-gray-600 text-lg">Avg. Daily Travel (KM):</p>
                     <p className="text-3xl font-bold text-purple-600">{avgDailyTravel} KM</p>
+                </div>
+                <div>
+                    <p className="text-gray-600 text-lg">Avg. Mileage (KM/₹):</p>
+                    <p className="text-3xl font-bold text-orange-600">{avgMileage.toFixed(2)} KM/₹</p>
                 </div>
             </div>
             {notification && (
@@ -107,7 +122,7 @@ function ExpenseSummary({ expenses, userSettings }) {
                 </div>
             )}
             <div className="text-center mt-6">
-                <a href="expense-tracker.html" className="dashboard-btn inline-block">View Full Expenses</a>
+                <a href="/expense-tracker" className="dashboard-btn inline-block">View Full Expenses</a>
             </div>
         </div>
     );
