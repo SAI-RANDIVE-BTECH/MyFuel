@@ -1,4 +1,16 @@
-/* Custom CSS for auth.html (Login and Signup pages) - MyFuel Theme */
+/* Custom CSS for auth.html (Login and Signup pages) - Redesigned UI/UX */
+
+/* Color Palette Variables */
+:root {
+    --color-primary-dark: #54162B;
+    --color-accent-red: #B4182D;
+    --color-soft-orange: #FDA481;
+    --color-dark-blue-gray-text: #37415C;
+    --color-darker-blue-gray-elements: #242E49;
+    --color-deepest-blue-gray-bg: #181A2F;
+    --color-light-bg: #F9FAFB; /* Used for light sections */
+    --color-white: #FFFFFF;
+}
 
 /* Keyframe Animations */
 @keyframes fadeIn {
@@ -8,86 +20,400 @@
 
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    to { transform: translateY(0); opacity: 1; }
 }
 
-/* Apply animations */
-.animate-fade-in-up {
-    animation: fadeInUp 1s ease-out forwards;
+/* Animation for the main container sliding in */
+@keyframes containerSlideIn {
+    from { transform: scale(0.9) translateY(50px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Animation for panel entry */
+@keyframes panelEntry {
+    from { opacity: 0; transform: translateX(50px); }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Staggered animation for form elements (using --i and --j) */
+@keyframes staggeredFadeInUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
 /* General body styling */
 body {
-    background-color: #F9FAFB; /* bg-gray-50 - light background */
-    color: #1F2937; /* text-gray-900 - dark text for contrast */
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', sans-serif; /* Modern and elegant font */
+    background-color: var(--color-deepest-blue-gray-bg); /* Deepest background color */
+    color: var(--color-dark-blue-gray-text); /* Default text color */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem; /* Increased padding */
+    overflow: hidden; /* Prevent scroll on initial animations */
 }
 
-/* Form container styling */
-.bg-gray-800 { /* This class is used in HTML, let's redefine it for the new theme */
-    background-color: #FFFFFF; /* White background for the form */
-    border: 1px solid #E5E7EB; /* Subtle border */
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Lighter shadow */
+/* Main Auth Container (the large card with two panels) */
+.auth-container {
+    background-color: var(--color-white);
+    border-radius: 1.5rem; /* More rounded corners */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); /* Deeper shadow */
+    width: 100%;
+    max-width: 960px; /* Wider container for the split layout */
+    display: flex;
+    overflow: hidden; /* Crucial for inner rounded corners and layout */
+    animation: containerSlideIn 1s ease-out forwards; /* Main entry animation */
 }
 
-/* Input field styling */
-input[type="email"],
-input[type="password"],
-input[type="text"] {
-    background-color: #F3F4F6; /* bg-gray-100 - very light gray for input fields */
-    border: 1px solid #D1D5DB; /* border-gray-300 */
-    color: #1F2937; /* Dark text for input */
+/* Left Panel (Welcome Back / Call to Action) */
+.auth-panel-left {
+    flex: 1;
+    background: linear-gradient(135deg, var(--color-darker-blue-gray-elements), var(--color-dark-blue-gray-text)); /* Gradient background */
+    color: var(--color-white);
+    padding: 3.5rem; /* Increased padding */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    animation: panelEntry 0.8s ease-out forwards; /* Entry animation */
 }
 
-input[type="email"]:focus,
-input[type="password"]:focus,
-input[type="text"]:focus {
-    border-color: #3B82F6; /* focus:ring-blue-500 */
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); /* Subtle blue ring */
+.auth-panel-left h2 {
+    font-size: 2.8rem; /* Larger heading */
+    font-weight: 800; /* Extra bold */
+    margin-bottom: 1.2rem;
+    color: var(--color-soft-orange); /* Highlighted text */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle text shadow */
 }
 
-/* Button styling */
-button[type="submit"] {
-    background-color: #2563EB; /* bg-blue-700 - primary blue */
-    color: #FFFFFF; /* White text */
+.auth-panel-left p {
+    font-size: 1.15rem; /* Slightly larger paragraph */
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85); /* Slightly brighter text */
 }
 
-button[type="submit"]:hover {
-    background-color: #1D4ED8; /* hover:bg-blue-800 - darker blue on hover */
+.auth-panel-left .btn-outline {
+    background-color: transparent;
+    border: 2px solid var(--color-soft-orange);
+    color: var(--color-soft-orange);
+    padding: 0.9rem 3rem; /* Larger button */
+    border-radius: 9999px; /* Rounded full */
+    font-weight: 700; /* Bold font */
+    letter-spacing: 0.05em; /* Slight letter spacing */
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smoother transition */
+    text-transform: uppercase; /* Uppercase text */
 }
 
-button[type="submit"]:focus {
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4); /* focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 */
+.auth-panel-left .btn-outline:hover {
+    background-color: var(--color-soft-orange);
+    color: var(--color-darker-blue-gray-elements);
+    box-shadow: 0 0 20px rgba(253, 164, 129, 0.7); /* Stronger glow */
+    transform: translateY(-3px) scale(1.02); /* Lift and slight scale */
+}
+
+/* Right Panel (Form) */
+.auth-panel-right {
+    flex: 1;
+    background-color: var(--color-white);
+    padding: 3.5rem; /* Increased padding */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    animation: panelEntry 0.8s ease-out forwards; /* Entry animation */
+    animation-delay: 0.2s; /* Slight delay for staggered effect */
+}
+
+.auth-panel-right h2.title { /* Specific for form titles */
+    font-size: 2.8rem; /* Larger heading */
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 2.5rem; /* Increased margin */
+    color: var(--color-primary-dark); /* Dark primary color */
+    /* Staggered animation for title */
+    opacity: 0; /* Start hidden for animation */
+    animation: staggeredFadeInUp 0.6s ease-out forwards;
+    animation-delay: calc(var(--i) * 0.05s + var(--j) * 0.1s);
+}
+
+/* Social Icons */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 1.8rem; /* Increased gap */
+    margin-bottom: 2rem; /* Increased margin */
+}
+
+.social-icon {
+    width: 48px; /* Larger icon size */
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--color-light-bg); /* Light background for icons */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem; /* Larger icon font size */
+    color: var(--color-dark-blue-gray-text);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Stronger shadow */
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    opacity: 0; /* Start hidden for animation */
+    animation: staggeredFadeInUp 0.6s ease-out forwards;
+    animation-delay: calc(var(--i) * 0.05s + var(--j) * 0.1s);
+}
+
+.social-icon:hover {
+    background-color: var(--color-soft-orange);
+    color: var(--color-white);
+    transform: translateY(-5px) scale(1.15); /* More pronounced lift and scale */
+    box-shadow: 0 8px 20px rgba(253, 164, 129, 0.6); /* Stronger glow */
+}
+
+.or-separator {
+    text-align: center;
+    margin: 2rem 0; /* Increased margin */
+    color: var(--color-dark-blue-gray-text);
+    position: relative;
+    font-size: 1rem; /* Slightly larger font */
+    font-weight: 500;
+    text-transform: uppercase;
+    opacity: 0; /* Start hidden for animation */
+    animation: staggeredFadeInUp 0.6s ease-out forwards;
+    animation-delay: calc(var(--i) * 0.05s + var(--j) * 0.1s);
+}
+
+.or-separator::before,
+.or-separator::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 35%; /* Adjusted width */
+    height: 1px;
+    background-color: #D1D5DB; /* Light gray line */
+}
+
+.or-separator::before {
+    left: 0;
+}
+
+.or-separator::after {
+    right: 0;
+}
+
+/* Form Inputs - New Design based on image */
+.input-box {
+    position: relative;
+    width: 100%;
+    height: 50px; /* Fixed height for consistency */
+    margin-bottom: 2rem; /* Spacing between input boxes */
+    opacity: 0; /* Start hidden for animation */
+    animation: staggeredFadeInUp 0.6s ease-out forwards;
+    animation-delay: calc(var(--i) * 0.05s + var(--j) * 0.1s);
+}
+
+.input-box input {
+    width: 100%;
+    height: 100%;
+    background: var(--color-light-bg); /* Light background for input field */
+    border: none;
+    outline: none;
+    border-radius: 0.6rem; /* Match general rounding */
+    padding: 0 1.2rem; /* Padding for text */
+    padding-right: 3rem; /* Space for icon */
+    font-size: 1.05rem;
+    color: var(--color-darker-blue-gray-elements); /* Dark text for input */
+    transition: all 0.3s ease-in-out;
+}
+
+.input-box label {
+    position: absolute;
+    top: 50%;
+    left: 1.2rem;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    color: #9CA3AF; /* Placeholder color */
+    pointer-events: none; /* Allow clicks to pass through to input */
+    transition: all 0.3s ease-in-out;
+}
+
+.input-box input:focus ~ label,
+.input-box input:valid ~ label { /* Label moves up when input has value or is focused */
+    top: 0;
+    left: 0.8rem; /* Adjust left position when moved up */
+    font-size: 0.8rem;
+    color: var(--color-soft-orange); /* Soft orange when active */
+    background-color: var(--color-white); /* Background for label when moved up */
+    padding: 0 0.4rem;
+    border-radius: 4px;
+}
+
+.input-box i { /* Icon inside input box */
+    position: absolute;
+    right: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.4rem;
+    color: #9CA3AF; /* Icon color */
+    transition: color 0.3s ease-in-out;
+}
+
+.input-box input:focus ~ i,
+.input-box input:valid ~ i {
+    color: var(--color-soft-orange); /* Soft orange when active */
+}
+
+/* Checkbox and Forgot Password */
+.remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+    opacity: 0; /* Start hidden for animation */
+    animation: staggeredFadeInUp 0.6s ease-out forwards;
+    animation-delay: calc(var(--i) * 0.05s + var(--j) * 0.1s);
+}
+
+.remember-forgot label input {
+    accent-color: var(--color-soft-orange); /* Checkbox color */
+    margin-right: 0.4rem;
+    cursor: pointer;
+}
+
+.remember-forgot a {
+    color: var(--color-soft-orange);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+.remember-forgot a:hover {
+    color: var(--color-accent-red);
+    text-decoration: underline;
+}
+
+/* Submit Button */
+.btn-submit {
+    width: 100%;
+    background-color: var(--color-primary-dark); /* Dark primary color */
+    color: var(--color-white);
+    font-weight: 700;
+    padding: 1rem 1.5rem; /* Larger padding */
+    border-radius: 0.75rem; /* rounded-xl */
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 5px 15px rgba(84, 22, 43, 0.3); /* Shadow based on primary dark */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0; /* Start hidden for animation */
+    animation: staggeredFadeInUp 0.6s ease-out forwards;
+    animation-delay: calc(var(--i) * 0.05s + var(--j) * 0.1s);
+}
+
+.btn-submit:hover {
+    background-color: var(--color-accent-red); /* Accent color on hover */
+    transform: translateY(-3px); /* Lift button */
+    box-shadow: 0 8px 20px rgba(180, 24, 45, 0.4); /* Stronger shadow */
 }
 
 /* Message Box Styling */
 #messageBox {
-    font-weight: 500; /* Medium font weight */
+    font-weight: 500;
+    margin-top: 2rem; /* Increased margin */
+    padding: 1rem; /* Increased padding */
+    border-radius: 0.75rem;
+    font-size: 0.95rem;
 }
 #messageBox.success {
     background-color: #D1FAE5; /* green-100 */
     color: #065F46; /* green-800 */
     border: 1px solid #A7F3D0; /* green-300 */
 }
-
 #messageBox.error {
     background-color: #FEE2E2; /* red-100 */
     color: #991B1B; /* red-800 */
     border: 1px solid #FCA5A5; /* red-300 */
 }
-
 #messageBox.info {
     background-color: #DBEAFE; /* blue-100 */
     color: #1E40AF; /* blue-800 */
     border: 1px solid #93C5FD; /* blue-300 */
 }
 
-/* Responsive adjustments */
-@media (max-width: 640px) {
-    .max-w-md {
-        max-width: 95%; /* Adjust width for very small screens */
+/* Responsive Adjustments */
+@media (max-width: 960px) { /* Adjust for smaller desktops/large tablets */
+    .auth-container {
+        max-width: 760px;
     }
-    .text-4xl {
-        font-size: 2.5rem; /* Smaller heading on mobile */
+    .auth-panel-left,
+    .auth-panel-right {
+        padding: 2.5rem;
+    }
+    .auth-panel-left h2,
+    .auth-panel-right h2.title {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .auth-container {
+        flex-direction: column; /* Stack panels vertically */
+        max-width: 480px; /* Adjust max width for mobile */
+    }
+    .auth-panel-left,
+    .auth-panel-right {
+        border-radius: 1.5rem; /* Full rounded corners for each stacked panel */
+        padding: 2rem;
+    }
+    .auth-panel-left {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .auth-panel-right {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    .auth-panel-left h2,
+    .auth-panel-right h2.title {
+        font-size: 2rem;
+    }
+    .social-icons {
+        gap: 1rem;
+    }
+    .social-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.4rem;
+    }
+    .or-separator {
+        margin: 1rem 0;
+    }
+    .input-box {
+        margin-bottom: 1.5rem;
+    }
+    .input-box input {
+        padding: 0 1rem;
+        padding-right: 2.5rem;
+    }
+    .input-box label {
+        left: 1rem;
+    }
+    .input-box i {
+        right: 1rem;
+    }
+    .remember-forgot {
+        margin-bottom: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-panel-left,
+    .auth-panel-right {
+        padding: 1.5rem;
+    }
+    .auth-panel-left h2,
+    .auth-panel-right h2.title {
+        font-size: 1.8rem;
     }
 }
