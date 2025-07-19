@@ -1,0 +1,146 @@
+/* Dashboard CSS content goes here */
+/* Custom CSS for dashboard.html and React Components - MyFuel Theme */
+
+/* General body styling for consistency */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F9FAFB; /* bg-gray-50 */
+    color: #1F2937; /* text-gray-900 */
+}
+
+/* Navigation bar styling */
+nav {
+    border-bottom: 1px solid #E5E7EB; /* border-gray-200 */
+}
+
+/* Base card styling for React components */
+.dashboard-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 0.75rem; /* rounded-xl */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem; /* p-6 */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Headings within dashboard cards */
+.dashboard-card h3 {
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 700; /* font-bold */
+    color: #1F2937; /* text-gray-900 */
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+/* List item styling within dashboard components */
+.dashboard-list-item {
+    padding: 0.75rem 0; /* py-3 */
+    border-bottom: 1px solid #E5E7EB; /* border-gray-200 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dashboard-list-item:last-child {
+    border-bottom: none;
+}
+
+/* Buttons within dashboard */
+.dashboard-btn {
+    background-color: #2563EB; /* bg-blue-700 */
+    color: #FFFFFF;
+    font-weight: 600; /* font-semibold */
+    padding: 0.75rem 1.5rem; /* py-3 px-6 */
+    border-radius: 0.5rem; /* rounded-md */
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.dashboard-btn:hover {
+    background-color: #1D4ED8; /* hover:bg-blue-800 */
+    transform: scale(1.02);
+}
+
+/* Specific styles for TokenDisplay */
+.token-display-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 0.75rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* Deeper shadow */
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.token-display-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: linear-gradient(90deg, #3B82F6, #8B5CF6); /* blue-500 to purple-500 */
+    border-radius: 0.75rem 0.75rem 0 0;
+    animation: gradientFlow 4s ease infinite;
+    background-size: 200% 200%;
+}
+
+.token-display-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: linear-gradient(90deg, #3B82F6, #8B5CF6); /* blue-500 to purple-500 */
+    border-radius: 0 0 0.75rem 0.75rem;
+    animation: gradientFlow 4s ease infinite reverse;
+    background-size: 200% 200%;
+}
+
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.token-wait-time {
+    font-size: 4rem; /* text-6xl */
+    font-weight: 800; /* font-extrabold */
+    color: #2563EB; /* text-blue-700 */
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    animation: pulseWaitTime 2s ease-in-out infinite;
+}
+
+@keyframes pulseWaitTime {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.03); opacity: 0.95; }
+}
+
+.token-number {
+    font-size: 3rem; /* text-5xl */
+    font-weight: 800; /* font-extrabold */
+    letter-spacing: 0.05em; /* tracking-wider */
+    color: #1F2937; /* text-gray-900 */
+    margin-bottom: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dashboard-card {
+        padding: 1rem;
+    }
+    .dashboard-card h3 {
+        font-size: 2rem;
+    }
+    .token-wait-time {
+        font-size: 3rem;
+    }
+    .token-number {
+        font-size: 2.5rem;
+    }
+}

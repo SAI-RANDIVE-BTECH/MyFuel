@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyFuel - Find Stations</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS for OpenStreetMap -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzxHjGBLS1tMA5FroOfUhw4ZzP4="
+          crossorigin=""/>
+    <!-- Custom CSS for Map Page -->
+    <link rel="stylesheet" href="../css/map.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+    <!-- Navigation Bar -->
+    <nav class="bg-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-3xl font-extrabold text-blue-700 rounded-md p-2 hover:bg-gray-100 transition duration-300">MyFuel</a>
+            <ul class="flex space-x-6">
+                <li><a href="index.html" class="text-lg font-medium text-gray-700 hover:text-blue-700 transition duration-300">Home</a></li>
+                <li><a href="map.html" class="text-lg font-medium text-blue-700 transition duration-300">Find Stations</a></li>
+                <li><a href="expense-tracker.html" class="text-lg font-medium text-gray-700 hover:text-blue-700 transition duration-300">Expenses</a></li>
+                <li><a href="login.html" class="text-lg font-medium text-gray-700 hover:text-blue-700 transition duration-300">Login</a></li>
+                <li><a href="dashboard.html" class="text-lg font-medium text-gray-700 hover:text-blue-700 transition duration-300">Dashboard</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto p-8 flex flex-col lg:flex-row gap-8">
+        <!-- Map Container -->
+        <div class="lg:w-2/3 w-full bg-white rounded-xl shadow-lg border border-gray-100 p-4 relative flex flex-col animate-fade-in-up">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Stations Near You</h2>
+            <div id="map" class="flex-grow rounded-lg border border-gray-200"></div>
+            <div id="locationStatus" class="mt-4 text-center text-gray-600">Locating you...</div>
+            <button id="findMeButton" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transform hover:scale-105 transition duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50">
+                <span class="inline-block mr-2">📍</span> Find My Location
+            </button>
+        </div>
+
+        <!-- Filters and Station List -->
+        <div class="lg:w-1/3 w-full bg-white rounded-xl shadow-lg border border-gray-100 p-6 flex flex-col animate-slide-in-right">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Filter & Stations</h2>
+
+            <!-- Filter Options -->
+            <div class="mb-6 space-y-4">
+                <div>
+                    <label for="fuelTypeFilter" class="block text-gray-700 text-sm font-semibold mb-2">Fuel Type:</label>
+                    <select id="fuelTypeFilter" class="w-full p-3 border border-gray-300 rounded-md bg-gray-100 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">All Types</option>
+                        <option value="petrol">Petrol</option>
+                        <option value="diesel">Diesel</option>
+                        <option value="cng">CNG</option>
+                        <option value="ev">EV Charging</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="brandFilter" class="block text-gray-700 text-sm font-semibold mb-2">Brand:</label>
+                    <select id="brandFilter" class="w-full p-3 border border-gray-300 rounded-md bg-gray-100 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="all">All Brands</option>
+                        <option value="IndianOil">IndianOil</option>
+                        <option value="HP">HP</option>
+                        <option value="BP">Bharat Petroleum</option>
+                        <option value="Reliance">Reliance Petroleum</option>
+                        <option value="Nayara">Nayara Energy</option>
+                        <option value="TataPower">Tata Power EV</option>
+                        <option value="ChargeGrid">ChargeGrid</option>
+                        <option value="OtherEV">Other EV Chargers</option>
+                    </select>
+                </div>
+                <button id="applyFiltersButton" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md shadow-md transform hover:scale-105 transition duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50">
+                    Apply Filters
+                </button>
+            </div>
+
+            <!-- Station List -->
+            <div class="flex-grow overflow-y-auto pr-2">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Nearby Stations:</h3>
+                <div id="stationList" class="space-y-4">
+                    <!-- Station cards will be dynamically loaded here by JavaScript -->
+                    <p class="text-gray-500 text-center">No stations found or still loading...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 p-6 text-center text-gray-600 mt-auto shadow-inner border-t border-gray-200">
+        <p>&copy; 2025 MyFuel. All rights reserved.</p>
+    </footer>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/4K9+sGFu4j1/8ERifg=="
+            crossorigin=""></script>
+    <!-- Custom JavaScript for Map Page -->
+    <script src="../js/map.js"></script>
+</body>
+</html>

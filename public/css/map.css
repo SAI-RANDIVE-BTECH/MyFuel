@@ -1,0 +1,97 @@
+/* Map CSS content goes here */
+/* Custom CSS for map.html - MyFuel Theme */
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Apply animations */
+.animate-fade-in-up {
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+.animate-slide-in-right {
+    animation: slideInRight 1s ease-out forwards;
+    animation-delay: 0.3s; /* Stagger animation for side panel */
+    opacity: 0; /* Start hidden */
+}
+
+/* General body styling for consistency */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F9FAFB; /* bg-gray-50 */
+    color: #1F2937; /* text-gray-900 */
+}
+
+/* Map container specific styling */
+#map {
+    height: 500px; /* Default height for the map */
+    width: 100%;
+    z-index: 0; /* Ensure map is behind other elements if any */
+}
+
+/* Adjust map height for larger screens */
+@media (min-width: 1024px) { /* lg breakpoint */
+    #map {
+        height: calc(100vh - 200px); /* Adjust height to fill available vertical space */
+    }
+}
+
+/* Station list scrollbar styling */
+.overflow-y-auto::-webkit-scrollbar {
+    width: 8px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #cbd5e1; /* gray-300 */
+    border-radius: 10px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8; /* gray-400 */
+}
+
+/* Station card styling */
+.station-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 0.75rem; /* rounded-xl */
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow-sm */
+    padding: 1.5rem; /* p-6 */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.station-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 1023px) { /* Below lg breakpoint */
+    main {
+        flex-direction: column; /* Stack map and filters vertically */
+    }
+    .lg\:w-2\/3, .lg\:w-1\/3 {
+        width: 100%; /* Full width for both sections */
+    }
+    #map {
+        height: 400px; /* Slightly smaller map on mobile */
+    }
+}

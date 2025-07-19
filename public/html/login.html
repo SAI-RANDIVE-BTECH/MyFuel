@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyFuel - Login</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Custom CSS for Authentication Pages -->
+    <link rel="stylesheet" href="../css/auth.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md transform transition-all duration-300 ease-in-out scale-95 hover:scale-100">
+        <h2 class="text-4xl font-extrabold text-center mb-8 text-gray-900 animate-fade-in-up">
+            Welcome Back!
+        </h2>
+        <form id="loginForm" class="space-y-6">
+            <div>
+                <label for="email" class="block text-gray-700 text-sm font-semibold mb-2">Email Address</label>
+                <input type="email" id="email" name="email" required
+                       class="shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:ring-2 bg-gray-100 transition duration-200 ease-in-out"
+                       placeholder="your.email@example.com">
+            </div>
+            <div>
+                <label for="password" class="block text-gray-700 text-sm font-semibold mb-2">Password</label>
+                <input type="password" id="password" name="password" required
+                       class="shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-900 leading-tight focus:outline-none focus:ring-2 bg-gray-100 transition duration-200 ease-in-out"
+                       placeholder="••••••••">
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <input id="remember_me" name="remember_me" type="checkbox"
+                           class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <label for="remember_me" class="ml-2 block text-gray-700 text-sm">Remember me</label>
+                </div>
+                <a href="#" class="font-medium text-blue-600 hover:text-blue-700 transition duration-200 ease-in-out text-sm">Forgot Password?</a>
+            </div>
+            <button type="submit"
+                    class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 transform hover:scale-105 transition duration-300 ease-in-out shadow-md">
+                Login
+            </button>
+        </form>
+        <p class="mt-6 text-center text-gray-600 text-sm">
+            Don't have an account?
+            <a href="signup.html" class="font-medium text-blue-600 hover:text-blue-700 transition duration-200 ease-in-out">Sign Up</a>
+        </p>
+        <!-- Message Box for alerts/errors -->
+        <div id="messageBox" class="mt-4 p-3 rounded-md text-center hidden" role="alert"></div>
+    </div>
+
+    <!-- Custom JavaScript for Authentication -->
+    <script src="../js/auth.js"></script>
+</body>
+</html>

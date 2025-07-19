@@ -1,0 +1,93 @@
+/* Custom CSS for auth.html (Login and Signup pages) - MyFuel Theme */
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Apply animations */
+.animate-fade-in-up {
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+/* General body styling */
+body {
+    background-color: #F9FAFB; /* bg-gray-50 - light background */
+    color: #1F2937; /* text-gray-900 - dark text for contrast */
+    font-family: 'Inter', sans-serif;
+}
+
+/* Form container styling */
+.bg-gray-800 { /* This class is used in HTML, let's redefine it for the new theme */
+    background-color: #FFFFFF; /* White background for the form */
+    border: 1px solid #E5E7EB; /* Subtle border */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Lighter shadow */
+}
+
+/* Input field styling */
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+    background-color: #F3F4F6; /* bg-gray-100 - very light gray for input fields */
+    border: 1px solid #D1D5DB; /* border-gray-300 */
+    color: #1F2937; /* Dark text for input */
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="text"]:focus {
+    border-color: #3B82F6; /* focus:ring-blue-500 */
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); /* Subtle blue ring */
+}
+
+/* Button styling */
+button[type="submit"] {
+    background-color: #2563EB; /* bg-blue-700 - primary blue */
+    color: #FFFFFF; /* White text */
+}
+
+button[type="submit"]:hover {
+    background-color: #1D4ED8; /* hover:bg-blue-800 - darker blue on hover */
+}
+
+button[type="submit"]:focus {
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4); /* focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 */
+}
+
+/* Message Box Styling */
+#messageBox {
+    font-weight: 500; /* Medium font weight */
+}
+#messageBox.success {
+    background-color: #D1FAE5; /* green-100 */
+    color: #065F46; /* green-800 */
+    border: 1px solid #A7F3D0; /* green-300 */
+}
+
+#messageBox.error {
+    background-color: #FEE2E2; /* red-100 */
+    color: #991B1B; /* red-800 */
+    border: 1px solid #FCA5A5; /* red-300 */
+}
+
+#messageBox.info {
+    background-color: #DBEAFE; /* blue-100 */
+    color: #1E40AF; /* blue-800 */
+    border: 1px solid #93C5FD; /* blue-300 */
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .max-w-md {
+        max-width: 95%; /* Adjust width for very small screens */
+    }
+    .text-4xl {
+        font-size: 2.5rem; /* Smaller heading on mobile */
+    }
+}

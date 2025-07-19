@@ -1,0 +1,65 @@
+/* Custom CSS for home.html - MyFuel Theme */
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Apply animations */
+.animate-fade-in {
+    animation: fadeIn 1.5s ease-out forwards;
+}
+
+.animate-slide-up {
+    animation: slideUp 1s ease-out forwards;
+    animation-delay: 0.5s; /* Delay for a staggered effect */
+    opacity: 0; /* Start hidden */
+}
+
+/* General body styling for consistency */
+body {
+    background-color: #F9FAFB; /* bg-gray-50 */
+    color: #1F2937; /* text-gray-900 */
+    font-family: 'Inter', sans-serif;
+}
+
+/* Navigation bar styling */
+nav {
+    border-bottom: 1px solid #E5E7EB; /* border-gray-200 */
+}
+
+/* Button hover effect */
+#findStationsButton:hover {
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.4); /* Blue glow */
+}
+
+/* Feature Card hover effect */
+.group:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Subtle shadow on hover */
+}
+
+.group:hover h3 {
+    color: #2563EB; /* Darker blue on hover */
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .text-6xl {
+        font-size: 3.5rem; /* Adjust font size for smaller screens */
+    }
+    .text-xl {
+        font-size: 1.125rem;
+    }
+    .grid-cols-3 {
+        grid-template-columns: 1fr; /* Stack cards on mobile */
+    }
+    .container {
+        padding: 1rem; /* Adjust padding on smaller screens */
+    }
+}

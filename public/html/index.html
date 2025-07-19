@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyFuel - Your Smart Stop for Every Drive</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Custom CSS for Home Page -->
+    <link rel="stylesheet" href="../css/home.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+    <!-- Navigation Bar -->
+    <nav class="bg-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-3xl font-extrabold text-blue-700 rounded-md p-2 hover:bg-gray-100 transition duration-300">MyFuel</a>
+            <ul class="flex space-x-6">
+                <li><a href="index.html" class="text-lg font-medium text-gray-700 hover:text-blue-700 transition duration-300">Home</a></li>
+                <li><a href="map.html" class="text-lg font-medium text-gray-700 hover:text-blue-700 transition duration-300">Find Stations</a></li>
+                <li><a href="expense-tracker.html" class="text-lg font-medium text-gray-700 hover:text-blue-700 transition duration-300">Expenses</a></li>
+                <li><a href="login.html" class="text-lg font-medium text-gray-700 hover:text-blue-700 transition duration-300">Login</a></li>
+                <li><a href="dashboard.html" class="text-lg font-medium text-gray-700 hover:text-blue-700 transition duration-300">Dashboard</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <main class="flex-grow container mx-auto p-8 flex flex-col items-center justify-center text-center">
+        <h1 class="text-6xl font-extrabold mb-6 text-gray-900 animate-fade-in">
+            MyFuel: <span class="text-blue-700">Your Smart Stop</span> for Every Drive.
+        </h1>
+        <p class="text-xl text-gray-600 mb-10 max-w-3xl animate-slide-up">
+            Effortlessly locate, book, and manage your fuel and EV charging needs across India.
+        </p>
+        <button id="findStationsButton" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-10 rounded-full shadow-lg transform hover:scale-105 transition duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-lg">
+            Find Nearby Stations
+        </button>
+
+        <!-- Features Section -->
+        <section class="mt-20 w-full max-w-5xl">
+            <h2 class="text-4xl font-bold mb-12 text-gray-800">Why Choose MyFuel?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Feature Card 1: Locate Stations -->
+                <div class="bg-white rounded-xl shadow-lg p-8 transform hover:scale-105 transition duration-300 ease-in-out group border border-gray-100">
+                    <div class="text-6xl mb-4 text-blue-500">📍</div>
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-800">Locate All Stations</h3>
+                    <p class="text-gray-600 text-md">Find petrol, diesel, CNG, and EV charging points from all major Indian brands like IndianOil, HP, BP, Tata Power, and more.</p>
+                </div>
+                <!-- Feature Card 2: Book Slots & Avoid Queues -->
+                <div class="bg-white rounded-xl shadow-lg p-8 transform hover:scale-105 transition duration-300 ease-in-out group border border-gray-100">
+                    <div class="text-6xl mb-4 text-purple-500">⏰</div>
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-800">Book Slots & Save Time</h3>
+                    <p class="text-gray-600 text-md">Pre-book your slot, get an animated token with real-time wait times, and skip the queues.</p>
+                </div>
+                <!-- Feature Card 3: Track Expenses -->
+                <div class="bg-white rounded-xl shadow-lg p-8 transform hover:scale-105 transition duration-300 ease-in-out group border border-gray-100">
+                    <div class="text-6xl mb-4 text-green-500">📊</div>
+                    <h3 class="text-2xl font-semibold mb-3 text-gray-800">Smart Expense Tracking</h3>
+                    <p class="text-gray-600 text-md">Log your fuel/charging expenses and receive smart notifications based on your daily travel kilometers.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 p-6 text-center text-gray-600 mt-auto shadow-inner border-t border-gray-200">
+        <p>&copy; 2025 MyFuel. All rights reserved.</p>
+    </footer>
+
+    <!-- Custom JavaScript for Home Page -->
+    <script src="../js/home.js"></script>
+</body>
+</html>
