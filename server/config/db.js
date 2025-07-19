@@ -1,9 +1,8 @@
-// server/config/db.js - MongoDB Connection Configuration
+// server/config/db.js - MongoDB Connection Configuration (Simplified)
 
 const mongoose = require('mongoose');
 
-// connectDB now accepts the Station model as an argument
-const connectDB = async (StationModel) => { // <--- IMPORTANT CHANGE: Accepts StationModel as argument
+const connectDB = async () => {
     try {
         const conn = await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
@@ -11,20 +10,11 @@ const connectDB = async (StationModel) => { // <--- IMPORTANT CHANGE: Accepts St
         });
 
         console.log(`MongoDB Connected: ${conn.connection.host}`);
-
-        // --- Explicitly ensure geospatial index is created ---
-        // Use the StationModel passed as an argument
-        if (StationModel) { // Check if the model was successfully passed
-            await StationModel.createIndexes(); // <--- Use the passed model
-            console.log("Geospatial index on 'Station.location.coordinates' ensured.");
-        } else {
-            console.error("Error: Station model was not passed to connectDB function.");
-            process.exit(1);
-        }
+        return conn; // Return the connection object if needed elsewhere
 
     } catch (error) {
         console.error(`Error: ${error.message}`);
-        process.exit(1);
+        process.exit(1); // Exit process with failure
     }
 };
 

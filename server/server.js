@@ -3,7 +3,7 @@
 const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
-const connectDB = require('./config/db');
+const connectDB = require('./config/db'); // Import the simplified connectDB
 const cors = require('cors');
 
 // Load environment variables from .env file
@@ -13,17 +13,35 @@ const app = express();
 
 // --- Explicitly require all Mongoose models here ---
 // This ensures Mongoose processes the schemas and registers the models.
-// Import the Station model specifically to pass it to connectDB.
+// Import them as constants so they are available in this scope.
 const User = require('./models/User');
-const Station = require('./models/Station'); // <--- IMPORTANT CHANGE: Store Station model in a variable
+const Station = require('./models/Station'); // Keep this require here
 const Booking = require('./models/Booking');
 const Expense = require('./models/Expense');
 // --- END Explicit Model Loading ---
 
 
 // --- Connect to MongoDB ---
-// Pass the Station model directly to connectDB
-connectDB(Station); // <--- IMPORTANT CHANGE: Pass Station model as argument
+// Call connectDB without passing the model here.
+// The index creation will happen separately.
+connectDB();
+
+
+// --- Function to ensure indexes are created after server start ---
+// This function is called after the server starts listening,
+// ensuring Mongoose models are fully ready.
+const ensureIndexes = async () => {
+    try {
+        // Access the model directly, or via mongoose.model if preferred.
+        // Since we required it above, `Station` should be the model.
+        await Station.createIndexes(); // <--- Index creation moved here
+        console.log("Geospatial index on 'Station.location.coordinates' ensured.");
+    } catch (error) {
+        console.error("Error ensuring geospatial index:", error.message);
+        // Do not exit process here, as server might still be functional otherwise
+    }
+};
+
 
 // --- Middleware ---
 app.use(cors({
@@ -92,4 +110,8 @@ app.listen(PORT, () => {
     console.log(`Frontend accessible at http://localhost:${PORT}`);
     console.log(`Login page: http://localhost:${PORT}/login`);
     console.log(`Dashboard: http://localhost:${PORT}/dashboard`);
+
+    // Call ensureIndexes AFTER the server starts listening
+    // This gives Mongoose maximum time to register models.
+    ensureIndexes();
 });
