@@ -7,7 +7,7 @@ const dotenv = require('dotenv'); // For environment variables
 const connectDB = require('./config/db'); // MongoDB connection
 
 // Load environment variables from .env file
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
 
 const app = express();
 
